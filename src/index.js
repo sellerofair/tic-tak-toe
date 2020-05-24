@@ -96,17 +96,14 @@ class Game extends React.Component {
             const desc = move ?
                 "Перейти к ходу №" + move :
                 "К началу игры";
-            const selected = this.state.selectedStep === move ?
-                "<":
-                "";
+            const selected = this.state.selectedStep === move;
             const prevSquare = move ?
                 `${Math.floor(history[move].prevSquare / 3) + 1}, ${(history[move].prevSquare % 3) + 1} ` :
                 "";
             return(
                 <li key={move}>
                     {prevSquare}
-                    <button onClick={() => this.jumpTo(move)}>{desc}</button>
-                    {selected}
+                    <button class={selected ? "selected" : ""} onClick={() => this.jumpTo(move)}>{desc}</button>
                 </li>
             );
         });
