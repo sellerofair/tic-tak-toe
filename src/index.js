@@ -25,25 +25,24 @@ class Board extends React.Component {
     }
 
     render() {
+        let rows = [];
+        for (let i = 0; i < 3; i++) {
+            let squares = [];
+            for (let j = 0; j < 3; j++) {
+                squares.push(this.renderSquare(i * 3 + j));
+            }
+            rows.push(
+                <div className="board-row">
+                    {squares}
+                </div>
+            );
+        }
+
         return (
-        <div>
-            <div className="board-row">
-                {this.renderSquare(0)}
-                {this.renderSquare(1)}
-                {this.renderSquare(2)}
+            <div>
+                {rows}
             </div>
-            <div className="board-row">
-                {this.renderSquare(3)}
-                {this.renderSquare(4)}
-                {this.renderSquare(5)}
-            </div>
-            <div className="board-row">
-                {this.renderSquare(6)}
-                {this.renderSquare(7)}
-                {this.renderSquare(8)}
-            </div>
-        </div>
-        );
+        )
     }
 }
 
@@ -53,8 +52,10 @@ class Game extends React.Component {
         this.state = {
             history: [{
                 squares: Array(9).fill(null),
+                prevSquare: null,
             }],
             stepNumber: 0,
+            selectedStep: 0,
             xIsNext:true,
         }
     }
@@ -70,8 +71,10 @@ class Game extends React.Component {
         this.setState({
             history: history.concat([{
                 squares: squares,
+                prevSquare: i,
             }]),
             stepNumber: history.length,
+            selectedStep: history.length,
             xIsNext: !this.state.xIsNext,
         });
     }
@@ -79,6 +82,7 @@ class Game extends React.Component {
     jumpTo(step) {
         this.setState({
             stepNumber: step,
+            selectedStep: step,
             xIsNext: (step %2) === 0,
         })
     }
@@ -92,9 +96,17 @@ class Game extends React.Component {
             const desc = move ?
                 "Перейти к ходу №" + move :
                 "К началу игры";
+            const selected = this.state.selectedStep === move ?
+                "<":
+                "";
+            const prevSquare = move ?
+                `${Math.floor(history[move].prevSquare / 3) + 1}, ${(history[move].prevSquare % 3) + 1} ` :
+                "";
             return(
                 <li key={move}>
+                    {prevSquare}
                     <button onClick={() => this.jumpTo(move)}>{desc}</button>
+                    {selected}
                 </li>
             );
         });
