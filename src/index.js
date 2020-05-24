@@ -111,8 +111,10 @@ class Game extends React.Component {
         let status;
         if (winner) {
             status = "Выиграл " + winner;
-        } else {
+        } else if (this.state.selectedStep < 9) {
             status = "Следующий ход: " + (this.state.xIsNext ? "X" : "O");
+        } else {
+            status = "Ничья"
         }
         
         return (
